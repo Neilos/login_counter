@@ -19,13 +19,18 @@ describe User do
 
   let(:valid_user) do
     User.new(
-      username: 'Neil', 
+      firstname: 'Neil', 
+      lastname: 'Atkins', 
       email: 'neil@gmail.com', 
       password: 'password')
   end
 
   let(:invalid_email_user) do
-    User.new(username: 'Neil', email: 'neilatgmaildotcom', password: 'password')
+    User.new(
+      firstname: 'Neil', 
+      lastname: 'Atkins', 
+      email: 'neilatgmaildotcom', 
+      password: 'password')
   end
 
   describe "new user" do
@@ -62,7 +67,8 @@ describe User do
     context "without an email" do
       it "wont be valid (and so wont save to the database)" do
         no_email_user = User.new( 
-          username: 'Neil', 
+          firstname: 'Neil', 
+          lastname: 'Atkins',
           password: 'password')
         expect(User.all.count).to eql 0
         expect(no_email_user.valid?).to be_false
@@ -74,7 +80,8 @@ describe User do
     context "with an invalid email" do
       it "wont be valid (and so wont save to the database)" do
         invalid_email_user = User.new(
-          username: 'Neil', 
+          firstname: 'Neil', 
+          lastname: 'Atkins',
           email: 'neilatgmaildotcom', 
           password: 'password')
         expect(User.all.count).to eql 0
@@ -84,14 +91,28 @@ describe User do
       end
     end
 
-    context "without a name" do
+    context "without a first name" do
       it "wont be valid (and so wont save to the database)" do
-        no_username_user = User.new( 
+        no_first_name_user = User.new( 
+          lastname: 'Atkins',
           email: 'neil@gmail.com', 
           password: 'password')
         expect(User.all.count).to eql 0
-        expect(no_username_user.valid?).to be_false
-        no_username_user.save
+        expect(no_first_name_user.valid?).to be_false
+        no_first_name_user.save
+        expect(User.all.count).to eql 0
+      end
+    end
+
+    context "without a last name" do
+      it "wont be valid (and so wont save to the database)" do
+        no_last_name_user = User.new( 
+          firstname: 'Atkins',
+          email: 'neil@gmail.com', 
+          password: 'password')
+        expect(User.all.count).to eql 0
+        expect(no_last_name_user.valid?).to be_false
+        no_last_name_user.save
         expect(User.all.count).to eql 0
       end
     end
@@ -99,7 +120,8 @@ describe User do
     context "without a password" do
       it "wont be valid (and so wont save to the database)" do
         no_password_user = User.new( 
-          username: 'Neil', 
+          firstname: 'Neil', 
+          lastname: 'Atkins',
           email: 'neil@gmail.com')
         expect(User.all.count).to eql 0
         expect(no_password_user.valid?).to be_false
@@ -114,7 +136,8 @@ describe User do
 
     let(:existing_user) do
       user = User.new(
-        username: 'Neil', 
+        firstname: 'Neil', 
+        lastname: 'Atkins', 
         email: 'neil@gmail.com', 
         password: 'password')
       user.save

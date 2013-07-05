@@ -40,10 +40,23 @@ end
 
 feature "signing up" do
 
-  scenario "valid details are entered"
-    # it should add the user to the database
-    # it should confirm the signup
-    # it wont show the signup form
+    # {   username: 'Neil', 
+    #     email: 'neil@gmail.com', 
+    #     password: 'password')     }
+
+  scenario "valid details are entered" do
+    expect(User.all.count).to eql 0
+    visit '/'
+    click_link 'Sign Up'
+    within("#sign_up_form") do
+      fill_in 'Username', :with => 'Neil'
+      fill_in 'Email', :with => 'neil@example.com'
+      fill_in 'Password', :with => 'password'
+      click_button 'Sign Up'
+    end
+    expect(page).to have_content "Sign up successful"
+    expect(User.all.count).to eql 1
+  end
   
   scenario "with invalid email"
     # it should display an appropriate error message
