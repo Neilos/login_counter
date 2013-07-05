@@ -132,7 +132,7 @@ describe User do
 
   end
 
-  describe "existing user" do
+  describe "already signed up" do
 
     let(:existing_user) do
       user = User.new(
@@ -144,23 +144,24 @@ describe User do
       user
     end
 
-    context "on demand" do
-      it "can increment the count of the number of times a user has logged in" do
-        expect(existing_user.login_count).to eql 0
-        existing_user.increment_login_count
-        expect(existing_user.login_count).to eql 1
-      end
+    it "can increment the count of the number of times a user has logged in" do
+      expect(existing_user.login_count).to eql 0
+      existing_user.increment_login_count
+      expect(existing_user.login_count).to eql 1
+    end
 
-      it "knows when a given password is correct" do
-        expect(existing_user.correct_password?('password')).to be_true
-      end
+    it "knows when a given password is correct" do
+      expect(existing_user.correct_password?('password')).to be_true
+    end
 
-      it "knows when a given password is incorrect" do
-        expect(existing_user.correct_password?('incorrect')).to be_false
-      end
+    it "knows when a given password is incorrect" do
+      expect(existing_user.correct_password?('incorrect')).to be_false
+    end
+
+    it "has a full_name" do
+      expect(existing_user.full_name).to eql 'Neil Atkins'
     end
 
   end
-
 
 end

@@ -38,4 +38,8 @@ class User
     self.password == (salt + entered_password)
   end
 
+  def full_name
+    self.firstname + ' ' + self.lastname
+  end
+
 end

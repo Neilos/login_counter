@@ -13,4 +13,4 @@ end
 
 DataMapper.setup(:default, connection_string)
 DataMapper.finalize
-DataMapper.auto_migrate!
+DataMapper.auto_upgrade!

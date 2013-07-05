@@ -26,7 +26,7 @@ end
 Capybara.app = ApplicationController
 
 
-feature "visiting the home page" do
+feature "home page" do
 
   scenario "when logged out" do
     visit '/'
@@ -38,7 +38,7 @@ feature "visiting the home page" do
 
 end
 
-feature "signing up" do
+feature "sign up" do
 
     # {   username: 'Neil', 
     #     email: 'neil@gmail.com', 
@@ -47,12 +47,12 @@ feature "signing up" do
   scenario "valid details are entered" do
     expect(User.all.count).to eql 0
     visit '/'
-    click_link 'Sign Up'
+    click_link 'Sign up'
     within("#sign_up_form") do
       fill_in 'Username', :with => 'Neil'
       fill_in 'Email', :with => 'neil@example.com'
       fill_in 'Password', :with => 'password'
-      click_button 'Sign Up'
+      click_button 'Sign up'
     end
     expect(page).to have_content "Sign up successful"
     expect(User.all.count).to eql 1
@@ -76,7 +76,7 @@ feature "signing up" do
 
 end
 
-feature "logging in" do
+feature "log in" do
   
   scenario "with invalid email"
     # it should display an appropriate error message
@@ -91,7 +91,7 @@ feature "logging in" do
 
 end
 
-feature "logging out" do
+feature "log out" do
 
   scenario "when logged in"
     # it should show the home page
