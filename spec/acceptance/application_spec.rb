@@ -28,10 +28,10 @@ Capybara.app = ApplicationController
 
 feature "visiting the home page" do
 
-  scenario "when logged out"
-    # it should explain what the app does
-    # it should have a login form
-    # it should have a signup form
+  scenario "when logged out" do
+    visit '/'
+    expect(page).to have_content 'What This Application Does'
+  end
 
   scenario "when logged in"
     # it should show the login count page
@@ -39,6 +39,11 @@ feature "visiting the home page" do
 end
 
 feature "signing up" do
+
+  scenario "valid details are entered"
+    # it should add the user to the database
+    # it should confirm the signup
+    # it wont show the signup form
   
   scenario "with invalid email"
     # it should display an appropriate error message
@@ -55,11 +60,6 @@ feature "signing up" do
   scenario "when password is not of the correct length"
     # it should display an appropriate error message
     # it wont sign up the user
-
-  scenario "valid details are entered"
-    # it should add the user to the database
-    # it should confirm the signup
-    # it wont show the signup form
 
 end
 
