@@ -3,6 +3,7 @@ ENV['RACK_ENV'] = 'test'
 require 'rspec'
 require 'rack/test'
 require 'database_cleaner'
+require_relative '../../lib/models/DM_config'
 
 require_relative '../../lib/controllers/application_controller'
 

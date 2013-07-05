@@ -1,4 +1,5 @@
 require 'sinatra/base'
+require_relative '../models/DM_config'
 
 class ApplicationController < Sinatra::Base
 

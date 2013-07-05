@@ -4,6 +4,10 @@ require 'rspec'
 require 'capybara/rspec'
 require 'selenium-webdriver'
 require 'database_cleaner'
+require 'dm-transactions'
+
+require_relative '../../lib/models/DM_config'
+require_relative '../spec_helpers'
 require_relative '../../lib/controllers/application_controller'
 
 # Configure rspec
