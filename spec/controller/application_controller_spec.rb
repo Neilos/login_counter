@@ -28,6 +28,30 @@ end
 
 describe ApplicationController do
 
-  it "should..."
+  describe "signup" do
+    context "when signup is succesful"
+    it "should return a success message" do
+      submitted_data = {
+        :firstname => 'Simon',
+        :lastname => 'Jones',
+        :email => 'simon@gmail.com',
+        :password => 'password'}
+      post '/signup', params = submitted_data
+      expect(last_response.body.include?("Sign up successful!")).to eql true
+      expect(last_response.ok?).to eql true
+    end
+
+    it "should add user to the database" do
+      submitted_data = {
+        :firstname => 'Simon',
+        :lastname => 'Jones',
+        :email => 'simon@gmail.com',
+        :password => 'password'}
+      expect(User.all.count).to eql 0
+      post '/signup', params = submitted_data
+      expect(User.all.count).to eql 1
+    end
+  end
+
 
 end

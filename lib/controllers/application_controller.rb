@@ -15,4 +15,20 @@ get '/?' do
   erb :home
 end
 
+post '/signup/?' do
+  @user = User.create(
+    :firstname => params[:firstname],
+    :lastname => params[:lastname],
+    :email => params[:email],
+    :password => params[:password]
+  )
+  if @user.saved?
+    erb(:signup_success, :layout => false) 
+  else
+    halt 400, erb(:signup_failure, :layout => false)
+  end
+end
+
+
+
 end

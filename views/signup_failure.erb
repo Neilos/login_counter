@@ -1,0 +1,8 @@
+<div id="signupErrors" class="alert alert-block alert-error fade in">
+  <button type="button" class="close" data-dismiss="alert">x</button>
+  <ul>
+    <% @user.errors.each do |error_message| %>
+      <li><%= error_message.first %></li>
+    <% end %>
+  </ul>
+</div>

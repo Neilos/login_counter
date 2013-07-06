@@ -2,13 +2,20 @@ ENV['RACK_ENV'] = 'test'
 
 require 'rspec'
 require 'capybara/rspec'
-require 'selenium-webdriver'
+# require 'selenium-webdriver'
+# require 'capybara-webkit'
 require 'database_cleaner'
 require 'dm-transactions'
 
 require_relative '../../lib/models/DM_config'
 require_relative '../spec_helpers'
 require_relative '../../lib/controllers/application_controller'
+
+# # Use the webkit javascript driver
+# Capybara.javascript_driver = :webkit
+
+# Set the application to be used by capybara
+Capybara.app = ApplicationController
 
 # Configure rspec
 RSpec.configure do |c|
@@ -22,11 +29,7 @@ RSpec.configure do |c|
   end
 end
 
-# Set the application to be used by capybara
-Capybara.app = ApplicationController
-
-
-feature "home page" do
+feature "Visitor visits home page", :js => true do
 
   scenario "when logged out" do
     visit '/'
@@ -38,24 +41,27 @@ feature "home page" do
 
 end
 
-feature "sign up" do
+feature "Visitor signs up", :js => true do
 
-    # {   username: 'Neil', 
-    #     email: 'neil@gmail.com', 
-    #     password: 'password')     }
-
-  scenario "valid details are entered" do
+  scenario "with valid details" do
+    page.driver.options[:resynchronize] = false
     expect(User.all.count).to eql 0
     visit '/'
     click_link 'Sign up'
-    within("#sign_up_form") do
-      fill_in 'Username', :with => 'Neil'
+    within("#signup_form") do
+      fill_in 'First Name', :with => 'Neil'
+      fill_in 'Last Name', :with => 'Atkins'
       fill_in 'Email', :with => 'neil@example.com'
       fill_in 'Password', :with => 'password'
-      click_button 'Sign up'
+      # find('#buttonSignup').click
+      click_button('Sign Up')
     end
-    expect(page).to have_content "Sign up successful"
-    expect(User.all.count).to eql 1
+    puts "#{page.html.inspect}"
+    page.should have_css('#success_messages', :visible => true)
+    within('#messages') do
+      page.should have_content("Sign up successful!")
+    end
+    # expect(page).to have_content "Sign up successful!"
   end
   
   scenario "with invalid email"
@@ -66,17 +72,17 @@ feature "sign up" do
     # it should display an appropriate error message
     # it wont sign up the user
 
-  scenario "when password doesn't match password confirmation"
+  scenario "with a password doesn't match the password confirmation"
     # it should display an appropriate error message
     # it wont sign up the user
 
-  scenario "when password is not of the correct length"
+  scenario "without password of the wrong length"
     # it should display an appropriate error message
     # it wont sign up the user
 
 end
 
-feature "log in" do
+feature "Visitor logs in" do
   
   scenario "with invalid email"
     # it should display an appropriate error message
@@ -91,7 +97,7 @@ feature "log in" do
 
 end
 
-feature "log out" do
+feature "Visitor logs out" do
 
   scenario "when logged in"
     # it should show the home page
