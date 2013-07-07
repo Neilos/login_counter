@@ -1,21 +1,10 @@
 ENV['RACK_ENV'] = 'test'
 
 require 'rspec'
+require_relative '../spec_helpers.rb'
 require_relative '../../lib/models/DM_config'
 
 describe User do
-  
-  # Configure rspec
-  RSpec.configure do |c|
-    c.before(:each) do
-      DatabaseCleaner.start
-    end
-
-    c.after(:each) do
-      DatabaseCleaner.strategy = :truncation
-      DatabaseCleaner.clean
-    end
-  end
 
   let(:valid_user) do
     User.new(
