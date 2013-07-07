@@ -27,7 +27,7 @@ class User
     @password = "X" * new_password.length if new_password  # store a string of the same length as the password
     new_salt = make_salt
     self.salt = new_salt
-    self.hashed_password = BCrypt::Password.create(new_salt + new_password, :cost => 11)
+    self.hashed_password = BCrypt::Password.create(new_salt + new_password)
   end
 
   def make_salt
@@ -38,7 +38,7 @@ class User
     self.login_count = login_count + 1
   end
 
-  def user_authenticated?(entered_password)
+  def authenticated?(entered_password)
     BCrypt::Password.new(hashed_password) == (salt + entered_password)
   end
 

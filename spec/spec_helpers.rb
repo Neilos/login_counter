@@ -1,3 +1,9 @@
+ENV['RACK_ENV'] = 'test'
+require 'rspec'
+require 'rack/test'
+require 'database_cleaner'
+require 'dm-transactions'
+require 'debugger'
 
 RSpec.configure do |config|
   

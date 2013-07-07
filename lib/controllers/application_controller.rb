@@ -8,11 +8,16 @@ configure do
   set :root, Proc.new { File.join(File.dirname(__FILE__), "../../") }
   use Rack::Session::Cookie, 
       :key => 'rack.session', 
-      :secret => 'how many times are you going to login'
+      :secret => 'how many times are you going to login',
+      :httponly => true
 end
 
 get '/?' do
-  erb :home
+  if session[:user]
+    redirect '/logged_in'
+  else
+    erb :home
+  end
 end
 
 post '/signup/?' do
@@ -22,17 +27,6 @@ post '/signup/?' do
     :email => params[:email],
     :password => params[:password]
   )
-  puts
-  puts "*******OUTPUT*******"
-  puts "params[:firstname]:#{params[:firstname]}"
-  puts "params[:lastname]:#{params[:lastname]}"
-  puts "params[:email]:#{params[:email]}"
-  puts "params[:password]:#{params[:password]}"
-  @user.errors.each do |error|
-    puts "error: #{error}"
-  end
-  puts "********************"
-  puts
   if @user.saved?
     erb(:signup_success, :layout => false) 
   else
@@ -40,6 +34,25 @@ post '/signup/?' do
   end
 end
 
+post '/login' do
+  @user = User.first(:email => params[:email])
+  if !@user.nil? && @user.authenticated?(params[:password])
+    @user.increment_login_count
+    @user.save!
+    session[:user] = @user.id
+    redirect to "/logged_in", 304
+  else
+    halt 400, erb(:login_failure, :layout => false)
+  end
+end
 
+get '/logged_in' do
+  if session[:user]
+    @user = User.first(:id => session[:user])
+    erb :logged_in
+  else
+    redirect '/'
+  end
+end
 
 end

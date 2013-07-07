@@ -1,29 +1,37 @@
-ENV['RACK_ENV'] = 'test'
-
-require 'rspec'
+require_relative '../spec_helpers'
 require 'capybara/rspec'
 require 'selenium-webdriver'
-require 'database_cleaner'
-require 'dm-transactions'
-
-require_relative '../spec_helpers.rb'
 require_relative '../../lib/models/DM_config'
-require_relative '../spec_helpers'
 require_relative '../../lib/controllers/application_controller'
 
-# Set the application to be used by capybara
 Capybara.app = ApplicationController
 
 
-feature "Visitor visits home page"do
+feature "Visitor visits home page", :js => true   do
 
   scenario "when logged out" do
     visit '/'
     expect(page).to have_content 'What This Application Does'
   end
 
-  scenario "when logged in"
-    # it should show the login count page
+  scenario "when logged in"do
+    User.create(
+      firstname: 'Neil', 
+      lastname: 'Atkins', 
+      email: 'neil@gmail.com', 
+      password: 'password')
+    visit '/'
+    click_link('Log in')
+    within("#formLogin") do
+      fill_in 'Email', :with => 'neil@gmail.com'
+      fill_in 'Password', :with => 'password'
+      click_button('Log In')
+    end
+    page.should have_css('#loginCount')
+    page.should have_content("Currently logged in.")
+    visit '/'
+    expect(page).to have_content("Currently logged in.")
+  end
 
 end
 
@@ -148,22 +156,98 @@ feature "Visitor signs up", :js => true do
 
 end
 
-feature "Visitor logs in" do
+feature "Visitor logs in", :js => true do
   
-  scenario "with invalid email"
-    # it should display an appropriate error message
-    # it wont log the user in
+  scenario "for the FIRST time with correct credentials" do
+    User.create(
+      firstname: 'Neil', 
+      lastname: 'Atkins', 
+      email: 'neil@gmail.com', 
+      password: 'password')
+    visit '/'
+    click_link 'Log in'
+    within("#formLogin") do
+      fill_in 'Email', :with => 'neil@gmail.com'
+      fill_in 'Password', :with => 'password'
+      click_button('Log In')
+    end
+    page.should have_css('#loginCount')
+    page.should have_content("Currently logged in.")
+    page.should have_content("Login count since sign up: 1")
+  end
 
-  scenario "with wrong password"
-    # it should display an appropriate error message
-    # it wont log the user in
+  scenario "for the SECOND time with correct credentials" do
+    pending
+    User.create(
+      firstname: 'Neil', 
+      lastname: 'Atkins', 
+      email: 'neil@gmail.com', 
+      password: 'password')
+    visit '/'
+    click_link 'Log in'
+    within("#formLogin") do
+      fill_in 'Email', :with => 'neil@gmail.com'
+      fill_in 'Password', :with => 'password'
+      click_button('Log In')
+    end
+    page.should have_css('#loginCount')
+    page.should have_content("Currently logged in.")
+    page.should have_content("Login count since sign up: 1")
+    
+    # logout
 
-  scenario "with correct details"
-    # it should show the login count page
+    click_link 'Log in'
+    within("#formLogin") do
+      fill_in 'Email', :with => 'neil@gmail.com'
+      fill_in 'Password', :with => 'password'
+      click_button('Log In')
+    end
+    page.should have_css('#loginCount')
+    page.should have_content("Currently logged in.")
+    page.should have_content("Login count since sign up: 2")
 
+  end
+
+  scenario "with invalid email" do
+    User.create(
+      firstname: 'Neil', 
+      lastname: 'Atkins', 
+      email: 'neil@gmail.com', 
+      password: 'password')
+    visit '/'
+    click_link('Log in')
+    within("#formLogin") do
+      fill_in 'Email', :with => 'invalidemail'
+      fill_in 'Password', :with => 'password'
+      click_button('Log In')
+    end
+    page.should have_css('#loginErrors')
+    page.should have_content("Email and/or password are not recognized. Please try again")
+    page.should_not have_content("Currently logged in.")
+  end
+
+  scenario "with wrong password" do
+    User.create(
+      firstname: 'Neil', 
+      lastname: 'Atkins', 
+      email: 'neil@gmail.com', 
+      password: 'password')
+    visit '/'
+    click_link('Log in')
+    within("#formLogin") do
+      fill_in 'Email', :with => 'neil@gmail.com'
+      fill_in 'Password', :with => 'wrongpassword'
+      click_button('Log In')
+    end
+    page.should have_css('#loginErrors')
+    page.should have_content("Email and/or password are not recognized. Please try again")
+    page.should_not have_content("Currently logged in.")
+  end
+
+  
 end
 
-feature "Visitor logs out" do
+feature "Visitor logs out", :js => true do
 
   scenario "when logged in"
     # it should show the home page
