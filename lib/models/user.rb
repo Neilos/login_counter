@@ -14,16 +14,19 @@ class User
   property :hashed_password, Text, :required => true, :accessor => :private
   property :login_count, Integer, :default => 0, :writer => :private
   property :salt, Text, :required => true, :accessor => :private
+  attr_reader :password
+  validates_with_method :password, :validate_password
 
-  def password
-    @password ||= Password.new(self.salt + self.hashed_password)
+  def validate_password
+    return true if self.password && (8..32) === self.password.length
+    [false, "Password must be between 8 and 32 characters long"]
   end
 
   def password=(new_password)
+    @password = "X" * new_password.length if new_password  # store a string of the same length as the password
     new_salt = make_salt
     self.salt = new_salt
-    @password = BCrypt::Password.create(new_salt + new_password, :cost => 11)
-    self.hashed_password = @password
+    self.hashed_password = BCrypt::Password.create(new_salt + new_password, :cost => 11)
   end
 
   def make_salt
@@ -31,15 +34,15 @@ class User
   end
 
   def increment_login_count
-    self.login_count = self.login_count + 1
+    self.login_count = login_count + 1
   end
 
-  def correct_password?(entered_password)
-    self.password == (salt + entered_password)
+  def user_authenticated?(entered_password)
+    BCrypt::Password.new(hashed_password) == (salt + entered_password)
   end
 
   def full_name
-    self.firstname + ' ' + self.lastname
+    firstname + ' ' + lastname
   end
 
 end

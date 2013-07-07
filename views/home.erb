@@ -11,6 +11,7 @@
   <a href="#mySignup" role="button" class="btn" data-toggle="modal">Sign up</a> <!-- Button to trigger signup modal -->
   <a href="#myLogin" role="button" class="btn" data-toggle="modal">Log in</a> <!-- Button to trigger signup modal -->
   <div id="messages"></div>
+  <div id="KLASS"></div>
 </div>
 
 
@@ -25,7 +26,7 @@
   </div>
   <div class="modal-body">
     <div id="signup_form">
-      <form class="form-horizontal" action="/signup" method="post">
+      <form class="form-horizontal">
         <div class="control-group">
           <label class="control-label" for="inputFirstname">First Name</label>
           <div class="controls">
@@ -53,7 +54,7 @@
         <div class="control-group">
           <div class="controls">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-            <button id="buttonSignup" type="submit" class="btn btn-primary">Sign Up</button>
+            <input id="buttonSignup" type="submit" class="btn btn-primary" value="Sign Up"/>
           </div>
         </div>
       </form>

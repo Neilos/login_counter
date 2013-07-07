@@ -151,11 +151,11 @@ describe User do
     end
 
     it "knows when a given password is correct" do
-      expect(existing_user.correct_password?('password')).to be_true
+      expect(existing_user.user_authenticated?('password')).to be_true
     end
 
     it "knows when a given password is incorrect" do
-      expect(existing_user.correct_password?('incorrect')).to be_false
+      expect(existing_user.user_authenticated?('incorrect')).to be_false
     end
 
     it "has a full_name" do
