@@ -22,6 +22,17 @@ post '/signup/?' do
     :email => params[:email],
     :password => params[:password]
   )
+  puts
+  puts "*******OUTPUT*******"
+  puts "params[:firstname]:#{params[:firstname]}"
+  puts "params[:lastname]:#{params[:lastname]}"
+  puts "params[:email]:#{params[:email]}"
+  puts "params[:password]:#{params[:password]}"
+  @user.errors.each do |error|
+    puts "error: #{error}"
+  end
+  puts "********************"
+  puts
   if @user.saved?
     erb(:signup_success, :layout => false) 
   else

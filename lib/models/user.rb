@@ -15,6 +15,7 @@ class User
   property :login_count, Integer, :default => 0, :writer => :private
   property :salt, Text, :required => true, :accessor => :private
   attr_reader :password
+  validates_presence_of :password
   validates_with_method :password, :validate_password
 
   def validate_password
