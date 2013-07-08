@@ -20,7 +20,7 @@ Implementation
   * Please have acceptance tests for the app. Write them first.
   * Use bcrypt, hasing and salting to manage the password of the user
   * Use either postgres or mongoid as the database. Use either mongoid or datamapper.
-  * Use a cookie with a customer secret key
+  * Use a cookie with a custom secret key
   * Set your cookie to be http-only
   * Deploy to heroku. Make sure it works there (you'll need to add necessary add ons).
   * Validate your HTML with http://validator.w3.org/. Try to fix the errors it may show
