@@ -177,7 +177,6 @@ feature "Visitor logs in", :js => true do
   end
 
   scenario "for the SECOND time with correct credentials" do
-    pending
     User.create(
       firstname: 'Neil', 
       lastname: 'Atkins', 
@@ -194,7 +193,7 @@ feature "Visitor logs in", :js => true do
     page.should have_content("Currently logged in.")
     page.should have_content("Login count since sign up: 1")
     
-    # logout
+    click_link('Log out')
 
     click_link 'Log in'
     within("#formLogin") do
@@ -249,8 +248,37 @@ end
 
 feature "Visitor logs out", :js => true do
 
-  scenario "when logged in"
-    # it should show the home page
+  before(:each) do
+    User.create(
+      firstname: 'Neil', 
+      lastname: 'Atkins', 
+      email: 'neil@gmail.com', 
+      password: 'password')
+    visit '/'
+    click_link('Log in')
+    within("#formLogin") do
+      fill_in 'Email', :with => 'neil@gmail.com'
+      fill_in 'Password', :with => 'password'
+      click_button('Log In')
+    end
+  end
+
+  scenario "when logged in" do
+    
+    page.should have_css('#loginCount')
+    page.should have_content("Currently logged in.")
+    click_link('Log out')
+    expect(page).to have_content 'Home Page'
+    expect(page).to have_content 'What This Application Does'
+  end
+
+  scenario "and tries to access logged in page again" do
+
+    click_link('Log out')
+    visit '/logged_in'
+    expect(page).to have_content 'Home Page'
+    expect(page).to have_content 'What This Application Does'
+  end
 
 end
 

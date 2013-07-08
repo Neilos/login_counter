@@ -112,4 +112,15 @@ describe ApplicationController do
 
   end
 
+  describe "logout" do
+
+    it "should return a success message" do
+      get '/logout'
+      follow_redirect!
+      expect(last_response.body.include?('Home Page')).to eql true
+      expect(last_response.body.include?('What This Application Does')).to eql true
+    end
+
+  end
+
 end
